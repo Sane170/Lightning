@@ -9,7 +9,8 @@ module.exports = {
     { name:"Moderation", value:"`/ban` `/kick` `/timeout` `/warn` `/warnings` `/purge`" },
     { name:"Auto moderation", value:"`/automod enable` `/automod disable` `/automod status`" },
     { name:"Support", value:"`/ticket-panel` — create a button-based ticket panel" },
-    { name:"Server setup", value:"`/welcome set|disable|status` `/logging set|disable|status`" }
+    { name:"Server setup", value:"`/welcome set|disable|status` `/logging set|disable|status`" },
+    { name:"Community", value:"`/poll` — interactive voting • `/announce` — formatted announcements" }
    ).setFooter({ text:"More Lightning features are being built in stages." });
   await interaction.reply({ embeds:[embed], ephemeral:true });
  }
