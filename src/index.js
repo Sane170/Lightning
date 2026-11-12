@@ -37,4 +37,5 @@ client.on("interactionCreate", async interaction => {
 require("./events/automod")(client);
 require("./events/tickets")(client);
 require("./events/server-logs")(client);
+require("./events/polls")(client);
 client.login(process.env.DISCORD_TOKEN);
