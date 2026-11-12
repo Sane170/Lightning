@@ -7,7 +7,8 @@ Lightning is an all-in-one Discord bot built with Node.js and discord.js.
 - Slash-command framework with automatic command loading
 - General commands: `/help`, `/ping`, `/serverinfo`, `/userinfo`
 - Moderation: `/ban`, `/kick`, `/timeout`, `/warn`, `/warnings`, `/purge`
-- SQLite storage for warning history
+- SQLite storage for warning history and per-server AutoMod settings
+- AutoMod protections for rapid spam, Discord invite links, and excessive mentions (disabled by default; configure with `/automod`)
 - Permission checks and role-hierarchy safeguards for moderation actions
 
 More modules—including tickets, automod, welcome tools, role panels, leveling, giveaways, applications, and a web dashboard—will be added in development stages.
@@ -26,7 +27,7 @@ More modules—including tickets, automod, welcome tools, role panels, leveling,
 3. Copy `.env.example` to `.env`.
 4. Fill in `DISCORD_TOKEN` and `CLIENT_ID`. For fast testing, add your test server's ID to `GUILD_ID`.
 5. In the Discord Developer Portal, enable the **Server Members Intent** under Bot → Privileged Gateway Intents.
-6. Invite the bot with the `bot` and `applications.commands` scopes and the permissions needed for the features you use.
+6. In the Discord Developer Portal, also enable **Message Content Intent** (required for AutoMod to inspect message text). Invite the bot with the `bot` and `applications.commands` scopes and the permissions needed for the features you use. AutoMod needs Manage Messages; timeouts additionally need Moderate Members.
 7. Register slash commands with `npm run deploy`.
 8. Start Lightning with `npm start`.
 
@@ -44,7 +45,7 @@ Never share your bot token or commit your real `.env` file. Use your hosting pro
 
 - `npm run deploy` registers slash commands.
 - `npm start` starts the bot.
-- `data/lightning.sqlite` stores persistent warning records. Keep this folder on persistent storage when hosting.
+- `data/lightning.sqlite` stores warning records and AutoMod settings. Keep this folder on persistent storage when hosting.
 
 ## Security
 
