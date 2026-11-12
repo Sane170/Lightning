@@ -7,12 +7,12 @@ Lightning is an all-in-one Discord bot built with Node.js and discord.js.
 - Slash-command framework with automatic command loading
 - General commands: `/help`, `/ping`, `/serverinfo`, `/userinfo`
 - Moderation: `/ban`, `/kick`, `/timeout`, `/warn`, `/warnings`, `/purge`
-- SQLite storage for warning history and per-server AutoMod settings
-- AutoMod protections for rapid spam, Discord invite links, and excessive mentions (disabled by default; configure with `/automod`)
-- Private button-based support tickets with optional support-role access and close controls
+- AutoMod protections for rapid spam, Discord invite links, and excessive mentions (off by default; configure with `/automod`)
+- Private button-based support tickets with support-role and channel-manager access
+- Configurable welcome messages with `/welcome set`, `/welcome disable`, and `/welcome status`
+- Server event logs for member joins, member leaves, and deleted-message metadata with `/logging`
+- SQLite storage for warnings, AutoMod, ticket, welcome, and logging settings
 - Permission checks and role-hierarchy safeguards for moderation actions
-
-More modules—including tickets, automod, welcome tools, role panels, leveling, giveaways, applications, and a web dashboard—will be added in development stages.
 
 ## Requirements
 
@@ -27,8 +27,12 @@ More modules—including tickets, automod, welcome tools, role panels, leveling,
 2. Install packages with `npm install`.
 3. Copy `.env.example` to `.env`.
 4. Fill in `DISCORD_TOKEN` and `CLIENT_ID`. For fast testing, add your test server's ID to `GUILD_ID`.
-5. In the Discord Developer Portal, enable the **Server Members Intent** under Bot → Privileged Gateway Intents.
-6. In the Discord Developer Portal, also enable **Message Content Intent** (required for AutoMod to inspect message text). Invite the bot with the `bot` and `applications.commands` scopes and the permissions needed for the features you use. AutoMod needs Manage Messages; timeouts additionally need Moderate Members. Ticket creation needs Manage Channels.
+5. In the Discord Developer Portal, enable **Server Members Intent** under Bot → Privileged Gateway Intents.
+6. Also enable **Message Content Intent** for AutoMod. Invite the bot with the `bot` and `applications.commands` scopes and only the permissions needed for the features you use:
+   - Moderation: Ban Members, Kick Members, Moderate Members, and Manage Messages as needed.
+   - AutoMod: Manage Messages; Moderate Members if you want Lightning to apply timeouts.
+   - Tickets: Manage Channels.
+   - Welcome and logs: View Channels and Send Messages in the selected channels.
 7. Register slash commands with `npm run deploy`.
 8. Start Lightning with `npm start`.
 
@@ -46,8 +50,12 @@ Never share your bot token or commit your real `.env` file. Use your hosting pro
 
 - `npm run deploy` registers slash commands.
 - `npm start` starts the bot.
-- `data/lightning.sqlite` stores warning records and AutoMod settings. Keep this folder on persistent storage when hosting.
+- `data/lightning.sqlite` stores server settings and warning records. Keep this folder on persistent storage when hosting.
 
-## Security
+## Privacy and security
 
-Lightning checks command permissions and moderation role hierarchy. Keep tokens in environment variables, use least-privilege bot permissions, and review moderation settings before inviting it to public servers.
+- Deleted-message logs store the author, channel, and message ID—not the message text.
+- Keep tokens in environment variables and use least-privilege bot permissions.
+- Review AutoMod settings and server permissions before inviting Lightning to public servers.
+
+Lightning is still in development and has not yet been live-tested with a Discord bot token.
