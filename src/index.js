@@ -38,4 +38,5 @@ require("./events/automod")(client);
 require("./events/tickets")(client);
 require("./events/server-logs")(client);
 require("./events/polls")(client);
+require("./events/suggestions")(client);
 client.login(process.env.DISCORD_TOKEN);
