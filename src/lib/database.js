@@ -10,6 +10,13 @@ CREATE TABLE IF NOT EXISTS warnings (
  id INTEGER PRIMARY KEY AUTOINCREMENT, guild_id TEXT NOT NULL, user_id TEXT NOT NULL,
  moderator_id TEXT NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS ticket_settings (
+ guild_id TEXT PRIMARY KEY, support_role_id TEXT
+);
+CREATE TABLE IF NOT EXISTS tickets (
+ channel_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, owner_id TEXT NOT NULL,
+ support_role_id TEXT, status TEXT NOT NULL DEFAULT 'open', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE IF NOT EXISTS automod_settings (
  guild_id TEXT PRIMARY KEY, spam_enabled INTEGER NOT NULL DEFAULT 0,
  invites_enabled INTEGER NOT NULL DEFAULT 0, mentions_enabled INTEGER NOT NULL DEFAULT 0
