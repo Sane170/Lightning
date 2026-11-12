@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS welcome_settings (
 CREATE TABLE IF NOT EXISTS log_settings (
  guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL
 );
-`CREATE TABLE IF NOT EXISTS polls (
+CREATE TABLE IF NOT EXISTS polls (
  id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, channel_id TEXT NOT NULL, message_id TEXT,
  question TEXT NOT NULL, options TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open',
  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
