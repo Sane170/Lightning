@@ -7,7 +7,8 @@ module.exports = {
    .addFields(
     { name:"General", value:"`/ping` `/help` `/serverinfo` `/userinfo`" },
     { name:"Moderation", value:"`/ban` `/kick` `/timeout` `/warn` `/warnings` `/purge`" },
-    { name:"Auto moderation", value:"`/automod enable` `/automod disable` `/automod status`" }
+    { name:"Auto moderation", value:"`/automod enable` `/automod disable` `/automod status`" },
+    { name:"Support", value:"`/ticket-panel` — create a button-based ticket panel" }
    ).setFooter({ text:"More Lightning features are being built in stages." });
   await interaction.reply({ embeds:[embed], ephemeral:true });
  }
