@@ -21,5 +21,11 @@ CREATE TABLE IF NOT EXISTS automod_settings (
  guild_id TEXT PRIMARY KEY, spam_enabled INTEGER NOT NULL DEFAULT 0,
  invites_enabled INTEGER NOT NULL DEFAULT 0, mentions_enabled INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS welcome_settings (
+ guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL, message TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS log_settings (
+ guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL
+);
 `);
 module.exports = db;
