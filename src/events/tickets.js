@@ -22,7 +22,14 @@ module.exports = client => {
     { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.AttachFiles] },
     { id: client.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.ManageChannels] }
    ];
-   if (supportRole) permissionOverwrites.push({
+   const staffRoles = interaction.guild.roles.cache.filter(role =>
+    role.id !== interaction.guild.roles.everyone.id &&
+    role.permissions.has(PermissionFlagsBits.ManageChannels)
+   );
+   for (const role of staffRoles.values()) {
+    permissionOverwrites.push({ id: role.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] });
+   }
+   if (supportRole && !staffRoles.has(supportRole.id)) permissionOverwrites.push({
     id: supportRole.id,
     allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory]
    });
