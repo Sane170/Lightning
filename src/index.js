@@ -35,4 +35,5 @@ client.on("interactionCreate", async interaction => {
  }
 });
 require("./events/automod")(client);
+require("./events/tickets")(client);
 client.login(process.env.DISCORD_TOKEN);
