@@ -32,6 +32,13 @@ CREATE TABLE IF NOT EXISTS polls (
  question TEXT NOT NULL, options TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open',
  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS suggestion_settings (
+ guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS suggestions (
+ message_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, user_id TEXT NOT NULL,
+ suggestion TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE IF NOT EXISTS poll_votes (
  poll_id TEXT NOT NULL, user_id TEXT NOT NULL, option_index INTEGER NOT NULL,
  PRIMARY KEY (poll_id, user_id), FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE
