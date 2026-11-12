@@ -9,6 +9,7 @@ Lightning is an all-in-one Discord bot built with Node.js and discord.js.
 - Moderation: `/ban`, `/kick`, `/timeout`, `/warn`, `/warnings`, `/purge`
 - SQLite storage for warning history and per-server AutoMod settings
 - AutoMod protections for rapid spam, Discord invite links, and excessive mentions (disabled by default; configure with `/automod`)
+- Private button-based support tickets with optional support-role access and close controls
 - Permission checks and role-hierarchy safeguards for moderation actions
 
 More modules—including tickets, automod, welcome tools, role panels, leveling, giveaways, applications, and a web dashboard—will be added in development stages.
@@ -27,7 +28,7 @@ More modules—including tickets, automod, welcome tools, role panels, leveling,
 3. Copy `.env.example` to `.env`.
 4. Fill in `DISCORD_TOKEN` and `CLIENT_ID`. For fast testing, add your test server's ID to `GUILD_ID`.
 5. In the Discord Developer Portal, enable the **Server Members Intent** under Bot → Privileged Gateway Intents.
-6. In the Discord Developer Portal, also enable **Message Content Intent** (required for AutoMod to inspect message text). Invite the bot with the `bot` and `applications.commands` scopes and the permissions needed for the features you use. AutoMod needs Manage Messages; timeouts additionally need Moderate Members.
+6. In the Discord Developer Portal, also enable **Message Content Intent** (required for AutoMod to inspect message text). Invite the bot with the `bot` and `applications.commands` scopes and the permissions needed for the features you use. AutoMod needs Manage Messages; timeouts additionally need Moderate Members. Ticket creation needs Manage Channels.
 7. Register slash commands with `npm run deploy`.
 8. Start Lightning with `npm start`.
 
