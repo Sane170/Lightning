@@ -18,7 +18,7 @@ module.exports = client => {
      .replaceAll("{user}", member.toString())
      .replaceAll("{server}", member.guild.name)
      .replaceAll("{memberCount}", String(member.guild.memberCount));
-    await channel.send({ content }).catch(() => {});
+    await channel.send({ content, allowedMentions: { parse: ["users"] } }).catch(() => {});
    }
   }
   await sendLog(member.guild, new EmbedBuilder().setColor(0x22C55E).setTitle("Member Joined")
