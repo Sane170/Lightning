@@ -56,13 +56,14 @@ module.exports = client => {
    const isStaff = interaction.memberPermissions?.has(PermissionFlagsBits.ManageChannels);
    if (!isOwner && !isStaff) return interaction.reply({ content: "Only the ticket creator or server staff can close this ticket.", ephemeral: true });
 
-   await interaction.deferReply();
+   await interaction.deferUpdate();
    db.prepare("UPDATE tickets SET status = 'closed' WHERE channel_id = ?").run(interaction.channelId);
    await interaction.channel.permissionOverwrites.edit(ticket.owner_id, { ViewChannel: false }).catch(() => {});
    await interaction.channel.setName(("closed-" + interaction.channel.name).slice(0, 100)).catch(() => {});
    const closedEmbed = new EmbedBuilder().setColor(0x64748B).setTitle("Ticket Closed")
     .setDescription("This ticket has been closed. Staff can still review the conversation.");
-   await interaction.editReply({ embeds: [closedEmbed], components: [] });
+   await interaction.message.edit({ embeds: [closedEmbed], components: [] });
+   await interaction.channel.send("This ticket has been closed.");
   }
  });
 };
