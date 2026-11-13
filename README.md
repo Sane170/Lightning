@@ -14,6 +14,7 @@ Lightning is an all-in-one Discord bot built with Node.js and discord.js.
 - Interactive polls with up to four choices; members can change their vote, and staff can end polls with `/poll-end`
 - Formatted announcements with `/announce`
 - Member suggestions with `/suggest`, configurable destination via `/suggestion-config`, and staff approve/decline buttons
+- XP leveling with a per-member message cooldown, level-up announcements, `/rank`, `/leaderboard`, and `/level-config`
 - SQLite storage for warnings, AutoMod, ticket, welcome, logging, poll, and suggestion data
 - Permission checks and role-hierarchy safeguards for moderation actions
 
@@ -39,6 +40,7 @@ Lightning is an all-in-one Discord bot built with Node.js and discord.js.
    - Polls: Send Messages, Embed Links, Read Message History, and Manage Messages for creating/ending polls.
    - Announcements: Send Messages and Embed Links in the selected channel.
    - Suggestions: Send Messages and Embed Links in the configured suggestion channel; staff reviewers need Manage Server.
+   - Leveling: Guild Messages intent; Lightning needs Send Messages and Embed Links where level-up announcements are posted.
 7. Register slash commands with `npm run deploy`.
 8. Start Lightning with `npm start`.
 
@@ -56,7 +58,7 @@ Never share your bot token or commit your real `.env` file. Use your hosting pro
 
 - `npm run deploy` registers slash commands.
 - `npm start` starts Lightning.
-- `data/lightning.sqlite` stores server settings, warning records, polls, and suggestions. Keep this folder on persistent storage when hosting.
+- `data/lightning.sqlite` stores server settings, warning records, polls, suggestions, and member XP. Keep this folder on persistent storage when hosting.
 
 ## Privacy and security
 
