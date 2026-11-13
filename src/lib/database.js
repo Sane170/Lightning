@@ -39,6 +39,13 @@ CREATE TABLE IF NOT EXISTS suggestions (
  message_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, user_id TEXT NOT NULL,
  suggestion TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS level_settings (
+ guild_id TEXT PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS levels (
+ guild_id TEXT NOT NULL, user_id TEXT NOT NULL, xp INTEGER NOT NULL DEFAULT 0,
+ last_xp_at INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (guild_id, user_id)
+);
 CREATE TABLE IF NOT EXISTS poll_votes (
  poll_id TEXT NOT NULL, user_id TEXT NOT NULL, option_index INTEGER NOT NULL,
  PRIMARY KEY (poll_id, user_id), FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE
