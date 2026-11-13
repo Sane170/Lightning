@@ -1,7 +1,6 @@
 const { Events, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 const db = require("../lib/database");
 const joinWindows = new Map();
-const JOIN_WINDOW_MS = 20000;
 const SUSPICIOUS_ACCOUNT_AGE_MS = 3 * 24 * 60 * 60 * 1000;
 const HONEYPOT_TIMEOUT_MS = 10 * 60 * 1000;
 function ensureSettings(guildId) {
@@ -20,7 +19,8 @@ module.exports = client => {
  client.on(Events.GuildMemberAdd, async member => {
   const settings = ensureSettings(member.guild.id);
   const now = Date.now();
-  const recent = (joinWindows.get(member.guild.id) || []).filter(timestamp => now - timestamp < JOIN_WINDOW_MS);
+  const windowMs = Math.max(5, settings.raid_window_seconds || 20) * 1000;
+  const recent = (joinWindows.get(member.guild.id) || []).filter(timestamp => now - timestamp < windowMs);
   recent.push(now);
   joinWindows.set(member.guild.id, recent);
   if (now - member.user.createdTimestamp < SUSPICIOUS_ACCOUNT_AGE_MS) {
@@ -32,9 +32,9 @@ module.exports = client => {
   }
   if (recent.length >= settings.raid_threshold && !settings.raid_mode) {
    db.prepare("UPDATE security_settings SET raid_mode = 1 WHERE guild_id = ?").run(member.guild.id);
-   record(member.guild.id, "join_spike", member.id, recent.length + " joins in approximately 20 seconds; raid mode enabled.");
+   record(member.guild.id, "join_spike", member.id, recent.length + " joins in " + settings.raid_window_seconds + " seconds; raid mode enabled.");
    await logToSecurityChannel(member.guild, settings, { embeds: [new EmbedBuilder().setColor(0xD83C3E).setTitle("Possible join raid detected")
-    .setDescription(recent.length + " members joined within approximately 20 seconds. Lightning enabled raid mode.")
+    .setDescription(recent.length + " members joined within " + settings.raid_window_seconds + " seconds. Lightning enabled raid mode.")
     .addFields({ name: "What changed", value: "Recently joined members now have stricter spam limits. No members were automatically banned or kicked." }).setTimestamp()] });
   }
  });
@@ -47,15 +47,16 @@ module.exports = client => {
       member.permissions.has(PermissionFlagsBits.ManageGuild) || member.permissions.has(PermissionFlagsBits.ManageMessages)) return;
   await message.delete().catch(() => {});
   const botMember = message.guild.members.me;
+  const accountIsNew = Date.now() - member.user.createdTimestamp < SUSPICIOUS_ACCOUNT_AGE_MS;
   let timedOut = false;
-  if (botMember?.permissions.has(PermissionFlagsBits.ModerateMembers) &&
+  if (accountIsNew && botMember?.permissions.has(PermissionFlagsBits.ModerateMembers) &&
       member.roles.highest.comparePositionTo(botMember.roles.highest) < 0) {
-   timedOut = await member.timeout(HONEYPOT_TIMEOUT_MS, "Lightning honeypot channel triggered").then(() => true).catch(() => false);
+   timedOut = await member.timeout(HONEYPOT_TIMEOUT_MS, "Lightning honeypot triggered by a recently created account").then(() => true).catch(() => false);
   }
   record(message.guild.id, "honeypot_trigger", member.id, "Honeypot message; timeout " + (timedOut ? "applied" : "not applied") + ".");
   await logToSecurityChannel(message.guild, settings, { embeds: [new EmbedBuilder().setColor(0xD83C3E).setTitle("Honeypot triggered")
    .setDescription(member.user.tag + " sent a message in the honeypot channel.")
    .addFields({ name: "Member", value: member.toString(), inline: true },
-    { name: "Action", value: timedOut ? "Message deleted; 10-minute timeout applied." : "Message deleted; moderator review required." }).setTimestamp()] });
+    { name: "Action", value: timedOut ? "Message deleted; 10-minute timeout applied because the account is under 3 days old." : "Message deleted; moderator review required." }).setTimestamp()] });
  });
 };
