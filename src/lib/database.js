@@ -6,49 +6,20 @@ fs.mkdirSync(dataDir, { recursive: true });
 const db = new Database(path.join(dataDir, "lightning.sqlite"));
 db.pragma("journal_mode = WAL");
 db.exec(`
-CREATE TABLE IF NOT EXISTS warnings (
- id INTEGER PRIMARY KEY AUTOINCREMENT, guild_id TEXT NOT NULL, user_id TEXT NOT NULL,
- moderator_id TEXT NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS ticket_settings (
- guild_id TEXT PRIMARY KEY, support_role_id TEXT
-);
-CREATE TABLE IF NOT EXISTS tickets (
- channel_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, owner_id TEXT NOT NULL,
- support_role_id TEXT, status TEXT NOT NULL DEFAULT 'open', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS automod_settings (
- guild_id TEXT PRIMARY KEY, spam_enabled INTEGER NOT NULL DEFAULT 0,
- invites_enabled INTEGER NOT NULL DEFAULT 0, mentions_enabled INTEGER NOT NULL DEFAULT 0
-);
-CREATE TABLE IF NOT EXISTS welcome_settings (
- guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL, message TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS log_settings (
- guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS polls (
- id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, channel_id TEXT NOT NULL, message_id TEXT,
- question TEXT NOT NULL, options TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open',
- created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS suggestion_settings (
- guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS suggestions (
- message_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, user_id TEXT NOT NULL,
- suggestion TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS level_settings (
- guild_id TEXT PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE IF NOT EXISTS levels (
- guild_id TEXT NOT NULL, user_id TEXT NOT NULL, xp INTEGER NOT NULL DEFAULT 0,
- last_xp_at INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (guild_id, user_id)
-);
-CREATE TABLE IF NOT EXISTS poll_votes (
- poll_id TEXT NOT NULL, user_id TEXT NOT NULL, option_index INTEGER NOT NULL,
- PRIMARY KEY (poll_id, user_id), FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE
-);
+CREATE TABLE IF NOT EXISTS warnings (id INTEGER PRIMARY KEY AUTOINCREMENT, guild_id TEXT NOT NULL, user_id TEXT NOT NULL, moderator_id TEXT NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS ticket_settings (guild_id TEXT PRIMARY KEY, support_role_id TEXT);
+CREATE TABLE IF NOT EXISTS tickets (channel_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, owner_id TEXT NOT NULL, support_role_id TEXT, status TEXT NOT NULL DEFAULT 'open', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS automod_settings (guild_id TEXT PRIMARY KEY, spam_enabled INTEGER NOT NULL DEFAULT 0, invites_enabled INTEGER NOT NULL DEFAULT 0, mentions_enabled INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS welcome_settings (guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL, message TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS log_settings (guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS polls (id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, channel_id TEXT NOT NULL, message_id TEXT, question TEXT NOT NULL, options TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS suggestion_settings (guild_id TEXT PRIMARY KEY, channel_id TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS suggestions (message_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, user_id TEXT NOT NULL, suggestion TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS level_settings (guild_id TEXT PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS levels (guild_id TEXT NOT NULL, user_id TEXT NOT NULL, xp INTEGER NOT NULL DEFAULT 0, last_xp_at INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (guild_id, user_id));
+CREATE TABLE IF NOT EXISTS poll_votes (poll_id TEXT NOT NULL, user_id TEXT NOT NULL, option_index INTEGER NOT NULL, PRIMARY KEY (poll_id, user_id), FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE);
+CREATE TABLE IF NOT EXISTS security_settings (guild_id TEXT PRIMARY KEY, log_channel_id TEXT, honeypot_channel_id TEXT, raid_threshold INTEGER NOT NULL DEFAULT 8, raid_window_seconds INTEGER NOT NULL DEFAULT 20, raid_mode INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS security_events (id INTEGER PRIMARY KEY AUTOINCREMENT, guild_id TEXT NOT NULL, event_type TEXT NOT NULL, user_id TEXT, details TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX IF NOT EXISTS idx_security_events_guild_created ON security_events(guild_id, created_at);
 `);
 module.exports = db;
