@@ -39,4 +39,5 @@ require("./events/tickets")(client);
 require("./events/server-logs")(client);
 require("./events/polls")(client);
 require("./events/suggestions")(client);
+require("./events/levels")(client);
 client.login(process.env.DISCORD_TOKEN);
