@@ -17,7 +17,12 @@ module.exports = client => {
   if (!botMember || !botMember.permissions.has(PermissionFlagsBits.ManageMessages)) return;
 
   let violation = null;
-  if (settings.invites_enabled && /(?:https?:\\/\\/)?(?:www\\.)?(?:discord\\.gg|discord(?:app)?\\.com\\/invite)\\/[\\w-]+/i.test(message.content)) {
+  const lowerContent = message.content.toLowerCase();
+  if (settings.invites_enabled && (
+      lowerContent.includes("discord.gg/") ||
+      lowerContent.includes("discord.com/invite/") ||
+      lowerContent.includes("discordapp.com/invite/")
+  )) {
    violation = "Discord invite links are not allowed here.";
   }
   if (!violation && settings.mentions_enabled && message.mentions.users.size >= 5) {
