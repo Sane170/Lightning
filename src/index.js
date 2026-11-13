@@ -18,7 +18,7 @@ for (const file of fs.readdirSync(commandsPath).filter(f => f.endsWith(".js"))) 
  if (command.data && command.execute) client.commands.set(command.data.name, command);
 }
 client.once("ready", () => {
- console.log("⚡ Lightning is online as " + client.user.tag);
+ console.log("Lightning is online as " + client.user.tag);
  console.log("Serving " + client.guilds.cache.size + " server(s).");
 });
 client.on("interactionCreate", async interaction => {
@@ -35,6 +35,7 @@ client.on("interactionCreate", async interaction => {
  }
 });
 require("./events/automod")(client);
+require("./events/security")(client);
 require("./events/tickets")(client);
 require("./events/server-logs")(client);
 require("./events/polls")(client);
